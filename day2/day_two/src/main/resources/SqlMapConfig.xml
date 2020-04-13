@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--mybatis的主配置文件-->
+<configuration>
+    <!--配置properties
+        可以在标签内部配置数据库信息，也可以通过属性引用外部配置文件信息
+        resources属性：用于指定配置文件的位置，是按照类路径的写法来写的并且必须存在于干路径下。
+        url可以唯一标识一个资源的位置
+        url属性：要求按照url的写法来写地址
+        url构成：协议 主机 端口 URI
+        URI可以在应用中唯一定位一个资源
+        -->
+    <!--<properties resource="jdbc.properties">-->
+    <properties url="file:///D:/MVC/day_two/src/main/resources/jdbc.properties">
+        <!--<property name="driver" value="com.mysql.jdbc.Driver"></property>-->
+        <!--<property name="url" value="jdbc:mysql://localhost:3306/boot"></property>-->
+        <!--<property name="username" value="root"></property>-->
+        <!--<property name="password" value="123456"></property>-->
+    </properties>
+    <!--只能配置domain类中的别名-->
+    <typeAliases>
+        <!--<typeAlias type="com.sn.domain.User" alias="user"></typeAlias>-->
+        <package name="com.sn.domain" ></package>
+    </typeAliases>
+    <!--配置环境-->
+    <environments default="mysql">
+        <!--配置mysql环境-->
+        <environment id="mysql">
+            <!--配置事务的类型-->
+            <transactionManager type="JDBC"></transactionManager>
+            <!--配置数据源（连接池）-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"></property>
+                <property name="url" value="${jdbc.url}"></property>
+                <property name="username" value="${jdbc.username}"></property>
+                <property name="password" value="${jdbc.password}"></property>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--指定映射配置文件的位置，映射配置文件值得是每个dao独立的文件配置-->
+    <mappers>
+        <package name="com/sn/dao"></package>
+    </mappers>
+</configuration>
+

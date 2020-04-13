@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn.dao.UserDao">
+    <resultMap id="user" type="com.sn.domain.User">
+        <id property="userId" column="id"></id>
+        <result property="userAddress" column="address"></result>
+        <result property="userBirthday" column="birthday"></result>
+        <result property="username" column="username"></result>
+        <result property="userSex" column="sex"></result>
+    </resultMap>
+    <!--配置查询所有-->
+    <select id="getAll" resultMap="user">
+        SELECT * FROM user
+    </select>
+    <insert id="saveUser" parameterType="com.sn.domain.User">
+        <selectKey keyProperty="userId" keyColumn="id" resultType="Integer" order="AFTER">
+            SELECT last_insert_id()
+        </selectKey>
+        INSERT INTO user(username,birthday,sex,address) VALUES (#{username},#{userBirthday},#{userSex},#{userAddress})
+    </insert>
+    <update id="updateUser" parameterType="com.sn.domain.User">
+        UPDATE user SET username=#{username},sex=#{userSex},address=#{userAddress} where id =#{userId}
+    </update>
+    <delete id="deleteUser" parameterType="Integer">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+    <select id="findById" parameterType="Integer" resultMap="user">
+        SELECT * FROM user WHERE id=#{id}
+    </select>
+    <select id="findUserByName" parameterType="String" resultMap="user">
+        SELECT * FROM user WHERE username like #{username}
+        <!--  SELECT * FROM  user WHERE username like '%${value}%'字符串拼接方式 -->
+    </select>
+    <select id="getCount" resultType="Integer">
+        SELECT COUNT(*) FROM user
+    </select>
+    <select id="findByName" parameterType="com.sn.domain.QueryVo" resultMap="user">
+        SELECT * FROM user WHERE username like #{user.username}
+    </select>
+    </mapper>

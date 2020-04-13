@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sn.dao.UserDao">
+    <resultMap id="user" type="User">
+        <id property="userId" column="id"></id>
+        <result property="userAddress" column="address"></result>
+        <result property="userBirthday" column="birthday"></result>
+        <result property="userName" column="username"></result>
+        <result property="userSex" column="sex"></result>
+    </resultMap>
+    <!--配置查询所有-->
+    <select id="getAll" resultMap="user">
+        SELECT * FROM user
+    </select>
+
+    <select id="findById" parameterType="Integer" resultMap="user">
+        SELECT * FROM user WHERE id=#{id}
+    </select>
+    <select id="findUserByName" parameterType="String" resultMap="user">
+        SELECT * FROM user WHERE username like #{userName}
+        <!--  SELECT * FROM  user WHERE username like '%${value}%'字符串拼接方式 -->
+    </select>
+    <select id="findByName" parameterType="com.sn.domain.QueryVo" resultMap="user">
+        SELECT * FROM user WHERE username like #{user.userName}
+    </select>
+    <select id="findUserByCondition" resultMap="user">
+        SELECT * FROM user
+        <where>
+            <if test="userName != null">
+               and username = #{userName}
+            </if>
+            <if test="userSex != null">
+              and sex = #{userSex}
+            </if>
+        </where>
+    </select>
+    <sql id="defaultSql">
+        SELECT username,birthday FROM user
+    </sql>
+    <select id="findUserByIds" resultMap="user" parameterType="com.sn.domain.QueryVo">
+        <include refid="defaultSql"></include>
+        <where>
+            <if test="ids !=null and ids.size()>0">
+                <foreach collection="ids" open="and id in (" close=")" item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    </mapper>
